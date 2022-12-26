@@ -4,9 +4,19 @@ from random import randint
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 
+
 class ChatConsumer(WebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.room_group_name = 0
+        self.room_group_name_list = []
+
     def connect(self):
-        self.room_group_name = str(randint(1000, 9999))
+        if self.room_group_name in self.room_group_name_list:
+            self.room_group_name = str(randint(1, 999999999))
+            self.room_group_name_list.append(self.room_group_name)
+        else:
+            self.room_group_name = str(randint(1, 999999999))
 
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
