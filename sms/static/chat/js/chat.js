@@ -11,16 +11,19 @@ const chatSocket = new WebSocket(url)
 chatSocket.onmessage = function (e) {
     let data = JSON.parse(e.data)
     console.log('Data', data)
-    console.log('MyID', myID.textContent)
 
-    if (data.userID === myID.textContent){
-        if(data.type === 'chat'){
-            let  messages = document.getElementById('messages')
+    let group_name = data.group_name;
+    if(data.set_id){
+        myID.insertAdjacentText('beforeend',group_name)
+        console.log('MyID', group_name)
+    }
 
-            messages.insertAdjacentHTML('beforeend', `<div>
-                                        <p>${data.message}</p>
-                                        </div>`)
-        }
+    if(data.type === 'chat'){
+        let  messages = document.getElementById('messages')
+
+        messages.insertAdjacentHTML('beforeend', `<div>
+                                    <p>${data.message}</p>
+                                    </div>`)
     }
 }
 
